@@ -1,12 +1,11 @@
 #include<stdio.h>
 #include<locale.h>
 #include<math.h>
-#include <string.h>
 double sch_y(double x)
 {
 	double y;
 	
-		y = (((pow(sin(x), 2) * cos(x)) / (x + 1)) + ((x + 3) / (1 + cos(pow(x,2)))));
+		y = ((pow(sin(x), 2) * cos(x)) / (x + 1)) + ((x + 3) / (1 + cos(pow(x,2))));
 
 	return y;
 }
@@ -32,31 +31,7 @@ typedef double (*Tsch) (double);
 double sch_y(double);
 double sch_v(double);
 void result(Tsch, double, double, double);
-//интервалы
-/* result_1(Tsch f, double xn, double xk, double h)
-{
-	for (double x = xn + 1; x < xk; x += h)
-	{
-	printf("\n| x | F(x) |");
-	printf("\n|%3.2lf |%3.5lf |", x, f(x));
-	}
-}
-void result_2(Tsch f, double xn, double xk, double h)
-{
-	for (double x = xn; x < xk; x += h)
-	{
-		printf("\n| x | F(x) |");
-		printf("\n|%3.2lf |%3.5lf |", x, f(x));
-	}
-}
-void result_3(Tsch f, double xn, double xk, double h)
-{
-	for (double x = xn + 1; x <= xk; x += h)
-	{
-		printf("\n| x | F(x) |");
-		printf("\n|%3.2lf |%3.5lf |", x, f(x));
-	}
-}*/
+//интервал
 void t_result(Tsch f, double xn, double xk, double h)
 {
 	char t=' ';
@@ -64,15 +39,15 @@ void t_result(Tsch f, double xn, double xk, double h)
 	for (double x = xn; x <= xk; x += h)
 	{
 		
-		printf("\n| %5.2lf | %15.10lf |", x, f(x));
+		printf("\n| %5.2lf | %15.4lf |", x, f(x));
 	}
 }
 //график?
 void plot(double x0, double x1, Tsch f)
 {
-	int SCREENW = 40, SCREENH = 40;//размеры поля вывода в символах
-	char screen[40][40];
-	double x, y[40];
+	int SCREENW = 60, SCREENH = 40;//размеры поля вывода в символах
+	char screen[60][40];
+	double x, y[60];
 	double ymin = 0, ymax = 0;
 	double hx, hy;
 	int i, j;
@@ -113,11 +88,12 @@ void main()
 {
 	setlocale(LC_ALL, "RUS");
 	double x, x1, x2, sh;
-	int r=-1;
+	int r = -1, q = -1;
+
 	char s1, s2, semicolon;
 	while (r!=0)
 	{
-		printf("\nВыберите расчёт:\nЧтобы найти значение функции F1(x) с заданным значением аргумента, нажмите 1.\nЧтобы найти значение функции F2(x) с заданным значением аргумента, нажмите 2.\nЧтобы найти значение функции F1(x) на заданном интервале (xn;xk), полуинтервале [xn;xk) или (xn;xk], отрезке [xn;xk] нажмите 3.\nЧтобы найти значение функции F2(x) на заданном интервале (xn;xk), полуинтервале [xn;xk) или (xn;xk], отрезке [xn;xk] нажмите 4.\nЧтобы нарисовать график для F1(x), нажмите 5.\nЧтобы нарисовать график для F2(x), нажмите 6.\nДля выхода из программы нажмите 0\n");
+		printf("\nВыберите расчёт:\nЧтобы найти значение функции F1(x) с заданным значением аргумента, нажмите 1.\nЧтобы найти значение функции F2(x) с заданным значением аргумента, нажмите 2.\nЧтобы найти значение функции F1(x) или F2(x) на заданном интервале (xn;xk), полуинтервале [xn;xk) или (xn;xk], отрезке [xn;xk] нажмите 3.\nЧтобы нарисовать график для F1(x), нажмите 4.\nЧтобы нарисовать график для F2(x), нажмите 5.\nДля выхода из программы нажмите 0\n");
 		scanf("%d", &r);
 		switch (r)
 		{
@@ -130,56 +106,41 @@ void main()
 		 case 2:
 			printf("Введите аргумент x:");
 			scanf("%lf", &x);
-			printf("%f", sch_v(x));
+			printf("%lf", sch_v(x));
 			break;
 		 case 3:
-			 printf("Введите интервал, или полуинтервал, или отрезок:");
-				 scanf(" %c%lf%c%lf%c",&s1,&x1,&semicolon,&x2,&s2);
-			 printf("\nВведите шаг табуляции:");
+			 printf("\nдля ф1 нажать 1, для ф2 нажать 2");
+			 scanf("%d", &q);
+			 switch (q)
+			 {
+			 case 1:
+				 printf("Введите интервал, или полуинтервал, или отрезок:");
+				 scanf(" %c%lf%c%lf%c", &s1, &x1, &semicolon, &x2, &s2);
+				 printf("\nВведите шаг табуляции:");
 				 scanf("%lf", &sh);
-				 if (s1 == '(') x1 += sh; 
+				 if (s1 == '(') x1 += sh;
 				 if (s2 == ')') x2 -= sh;
-				 t_result (sch_y, x1, x2, sh);
+				 t_result(sch_y, x1, x2, sh);
 				 break;
-				 /*if ((s1 == '(') && (s2 == ')'))
-					 result_1(sch_y, x1, x2, sh);
-				 else if ((s1 == '[') && (s2 == ')'))
-					 result_2(sch_y, x1, x2, sh);
-				 else if ((s1 == '(') && (s2 == ']'))
-					 result_3(sch_y, x1, x2, sh);
-				 else if ((s1 == '[') && (s2 == ']'))
-					 result_4(sch_y, x1, x2, sh);
-				 else
-					 printf("Ошибка!");
-				 break;*/
+			 case 2:
+				 printf("Введите интервал, или полуинтервал, или отрезок:");
+				 scanf(" %c%lf%c%lf%c", &s1, &x1, &semicolon, &x2, &s2);
+				 printf("\nВведите шаг табуляции:");
+				 scanf("%lf", &sh);
+				 if (s1 == '(') x1 += sh;
+				 if (s2 == ')') x2 -= sh;
+				 t_result(sch_v, x1, x2, sh);
+				 break;
+			 }
+			 break;
 		 case 4:
-			 printf("Введите интервал, или полуинтервал, или отрезок:");
-				scanf(" %c%lf%c%lf%c", &s1, &x1, &semicolon, &x2, &s2);
-			 printf("\nВведите шаг табуляции:");
-				scanf("%lf", &sh);
-				if (s1 == '(') x1 += sh;
-				if (s2 == ')') x2 -= sh;
-				t_result(sch_v, x1, x2, sh);
-				break;
-			/* if ((s1 == '(') && (s2 == ')'))
-				 result_1(sch_v, x1, x2, sh);
-			 else if ((s1 == '[') && (s2 == ')'))
-				 result_2(sch_v, x1, x2, sh);
-			 else if ((s1 == '(') && (s2 == ']'))
-				 result_3(sch_v, x1, x2, sh);
-			 else if ((s1 == '[') && (s2 == ']'))
-				 result_4(sch_v, x1, x2, sh);
-			 else
-				 printf("Ошибка!");
-			 break;*/
-		 case 5:
 			 printf("Введите интервал, или полуинтервал, или отрезок:");
 			 scanf(" %c%lf%c%lf%c", &s1, &x1, &semicolon, &x2, &s2);
 			 printf("\nВведите шаг табуляции:");
 			 scanf("%lf", &sh);
 			 plot(x1, x2, sch_y);
 			 break;
-		 case 6:
+		 case 5:
 			 printf("Введите интервал, или полуинтервал, или отрезок:");
 			 scanf(" %c%lf%c%lf%c", &s1, &x1, &semicolon, &x2, &s2);
 			 printf("\nВведите шаг табуляции:");
